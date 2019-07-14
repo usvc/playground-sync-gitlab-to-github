@@ -51,6 +51,7 @@
 
 ### At GitLab CI
 
+- [ ] Git shallow clone value set to 0.
 - [ ] Deploy key (base64-encoded private key) registered in environment variables as `DEPLOY_KEY`.
 - [ ] GitHub repository clone URL registered in environment variables as `GITHUB_REPO_URL`.
 
@@ -78,7 +79,11 @@ For the below steps, `/repo/path` should be substituted with the actual path to 
 
 ### Register public key as a deploy key for repository
 
-Go to https://gitlab.com/repo/path/-/settings/repository and add a new Deploy Key (ensure **Write acess allowed** is enabled). Paste in the contents of the public key at `./.ssh/id_rsa.pub`
+Go to https://gitlab.com/repo/path/-/settings/repository and add a new Deploy Key (ensure **Write acess allowed** is enabled). Paste in the contents of the public key at `./.ssh/id_rsa.pub`.
+
+### Set Git shallow clone to zero
+
+Go to https://gitlab.com/repo/path/-/settings/ci_cd#js-general-pipeline-settings and set the **Git clone shallow** value to 0. Shallow clones prevent pushing to GitHub.
 
 ### Inject private key as an environment variable
 
