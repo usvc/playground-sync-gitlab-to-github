@@ -39,7 +39,7 @@
 ### On GitHub
 
 - [ ] Personal access token created
-- [ ] Deploy key (public key) registered for repository
+- [ ] Deploy key (public key) registered for repository with Write Access
 
 ### At Travis CI
 
@@ -78,7 +78,7 @@ For the below steps, `/repo/path` should be substituted with the actual path to 
 
 ### Register public key as a deploy key for repository
 
-Go to https://gitlab.com/repo/path/-/settings/repository and add a new Deploy Key. Paste in the contents of the public key at `./.ssh/id_rsa.pub`
+Go to https://gitlab.com/repo/path/-/settings/repository and add a new Deploy Key (ensure **Write acess allowed** is enabled). Paste in the contents of the public key at `./.ssh/id_rsa.pub`
 
 ### Inject private key as an environment variable
 
@@ -92,7 +92,7 @@ Go to https://gitlab.com/repo/path/-/settings/ci_cd and register environment var
 
 ### Register public key as a deploy key for repository
 
-Go to https://github.com/repo/path/settings/keys and add a new deploy key. Paste in the contents of the public key at `./.ssh/id_rsa.pub`
+Go to https://github.com/repo/path/settings/keys and add a new deploy key (ensure **Write Access** is enabled). Paste in the contents of the public key at `./.ssh/id_rsa.pub`
 
 ## Travis
 
