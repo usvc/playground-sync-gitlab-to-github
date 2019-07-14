@@ -30,3 +30,10 @@ image:
 publish_image: image
 	@printf -- 'publish container image\n'
 	docker push $(IMAGE_REF)
+
+# sample commands
+
+ssl:
+	mkdir ./.ssh
+	ssh-keygen -t rsa -b 4096 -f ./.ssh/id_rsa -N ""
+	cat ./.ssh/id_rsa | base64 -w 0 > ./.ssh/id_rsa.b64

@@ -13,6 +13,8 @@
 - Enables organic discovery
 - Binary attachment to releases
 
+- - -
+
 # TL;DR Reference
 
 ## Flow
@@ -26,7 +28,6 @@
 7. GitHub repo recognises tagged commit as a release
 8. Travis CI receives tagged build request
 9. Pipeline deploys binaries to release
-
 
 ## Setup
 
@@ -58,6 +59,8 @@
 - [ ] Add job to [push back to GitLab on untagged commits](#pushing-back-to-gitlab-in-gitlab-ciyml)
 - [ ] Add job to [push to GitHub on tagged commits](#deploying-to-github-in-gitlab-ciyml)
 - [ ] Add deploy stage in Travis to [attach binaries to tagged commits](#deploying-binaries-from-travis)
+
+- - -
 
 # Setup Overview
 
