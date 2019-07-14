@@ -14,8 +14,8 @@ deploy:
   on:
     branch: master
     tags: true
-jobs:
-  include:
+include:
+  jobs:
     - stage: build
       script:
         - make dep
