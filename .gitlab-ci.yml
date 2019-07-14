@@ -1,0 +1,93 @@
+image: usvc/ci-golang:gitlab-latest
+services:
+  - docker:dind
+stages:
+  - validate
+  - release
+  - publish
+variables:
+  GITHUB_REPO_URL: git@github.com:usvc/sync-from-gitlab.git
+
+code is standardised:
+  except: ["tags"]
+  stage: validate
+  script:
+    - make dep
+    - make lint
+
+it works:
+  except: ["tags"]
+  stage: validate
+  script:
+    - make dep
+    - make test
+
+it can be built:
+  except: ["tags"]
+  stage: validate
+  script:
+    - make dep
+    - make build
+
+it can be containerised:
+  except: ["tags"]
+  stage: validate
+  script:
+    - make dep
+    - make image
+
+bump:
+  only: ["master"]
+  stage: release
+  image: usvc/semver:gitlab-latest
+  before_script:
+    - mkdir -p ~/.ssh
+    - 'printf -- "${DEPLOY_KEY}" | base64 -d > ~/.ssh/id_rsa'
+    - chmod 600 -R ~/.ssh/id_rsa
+    - ssh-keyscan -t rsa gitlab.com >> ~/.ssh/known_hosts
+  script:
+    - git remote set-url origin "${CI_REPOSITORY_URL}"
+    - git checkout master
+    - semver bump --git --apply
+    - git push origin master --verbose --tags
+  after_script:
+    - rm -rf ~/.ssh/*
+
+to image registry:
+  only: ["tags"]
+  stage: publish
+  allow_failure: true
+  before_script:
+    - |
+      if [ "${DOCKER_REGISTRY_URL}" = "" ]; then
+        printf -- 'DOCKER_REGISTRY_URL was not defined\n';
+        exit 1;
+      elif [ "${DOCKER_REGISTRY_USER}" = "" ]; then
+        printf -- 'DOCKER_REGISTRY_USER was not defined\n';
+        exit 1;
+      elif [ "${DOCKER_REGISTRY_PASSWORD}" = "" ]; then
+        printf -- 'DOCKER_REGISTRY_PASSWORD was not defined\n';
+        exit 1;
+      fi
+    - docker login ${DOCKER_REGISTRY_URL} -u ${DOCKER_REGISTRY_USER} -p ${DOCKER_REGISTRY_PASSWORD}
+  script:
+    - make publish_image
+  after_script:
+    - docker logout
+
+to github:
+  only: ["tags"]
+  stage: publish
+  before_script:
+    - mkdir -p ~/.ssh
+    - 'printf -- "${DEPLOY_KEY}" | base64 -d > ~/.ssh/id_rsa'
+    - chmod 600 -R ~/.ssh/id_rsa
+    - ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+  script:
+    - git config --global user.email "usvc.semver@usvc.dev"
+    - git config --global user.name "usvc_publisher"
+    - git remote set-url --add --push origin ${GITHUB_REPO_URL}
+    - git checkout master
+    - git push -u origin master --tags --force
+  after_script:
+    - rm -rf ~/.ssh/*

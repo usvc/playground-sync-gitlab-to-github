@@ -1,0 +1,22 @@
+sudo: required
+stages:
+  - build
+  - deploy
+git:
+  submodules: true
+  quiet: false
+deploy:
+  provider: releases
+  api_key: ${GITHUB_OAUTH_TOKEN}
+  file_glob: true
+  file: ./bin/*
+  skip_cleanup: true
+  on:
+    branch: master
+    tags: true
+jobs:
+  include:
+    - stage: build
+      script:
+        - make dep
+        - make build
